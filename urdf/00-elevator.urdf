@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<robot name="00-elevator">
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.023501 0.0098873 0.20267" rpy="0 0 0" />
+      <mass value="80" />
+      <inertia
+                ixx="12.778"
+                ixy="0.34979"
+                ixz="-3.418E-14"
+                iyy="7.8522"
+                iyz="-4.5558E-15"
+                izz="11.663"
+            />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.05" />
+      </geometry>
+      <material name="">
+        <color rgba="0.52941 0.54902 0.54902 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+      <sphere radius="0.05" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="rotate_rod1">
+    <inertial>
+      <origin xyz="0.016161 -0.027992 0.0008498" rpy="0 0 0" />
+      <mass value="2" />
+      <inertia
+                ixx="0.028472"
+                ixy="0.00021268"
+                ixz="-3.8124E-05"
+                iyy="0.028227"
+                iyz="6.6033E-05"
+                izz="0.00094714"
+            />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/rotate_rod1.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.52941 0.54902 0.54902 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/rotate_rod1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="rotate_rod_joint1" type="revolute">
+    <origin xyz="0.06 0 0" rpy="0 0 1.5708" />
+    <parent link="base_link" />
+    <child link="rotate_rod1" />
+    <axis xyz="0 0 1" />
+    <limit lower="-3.1415" upper="3.1415" effort="0" velocity="0" />
+  </joint>
+  <link name="rotate_rod2">
+    <inertial>
+      <origin xyz="-0.52341 -0.019859 -8.5709E-14" rpy="0 0 0" />
+      <mass value="2.1971" />
+      <inertia
+                ixx="0.0059315"
+                ixy="-0.01638"
+                ixz="-4.8081E-16"
+                iyy="0.16255"
+                iyz="3.8395E-17"
+                izz="0.16818"
+            />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/rotate_rod2.STL" />
+      </geometry>
+      <material name="">
+        <color rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../meshes/rotate_rod2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="prism_rod_bottom">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.01" />
+      <inertia
+                ixx="0.00001"
+                ixy="0"
+                ixz="0"
+                iyy="0.00001"
+                iyz="0"
+                izz="0.00001"
+            />
+    </inertial>
+    <visual>
+      <origin xyz="-0.15 0 0 " rpy="0 0 0" />
+      <geometry>
+        <box size="0.3 .02 .02" />
+      </geometry>
+      <material name="">
+        <color rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.05" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="prism_rod_bottom_joint" type="revolute">
+    <origin xyz="0.032502 -0.05 0.12" rpy="-1.5708 1.0585 2.0944" />
+    <parent link="rotate_rod1" />
+    <child link="prism_rod_bottom" />
+    <axis xyz="0 0 1" />
+    <limit lower="-3.1415" upper="3.1415" effort="0" velocity="0" />
+  </joint>
+  <link name="prism_rod_top">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.01" />
+      <inertia
+                ixx="0.00001"
+                ixy="0"
+                ixz="0"
+                iyy="0.00001"
+                iyz="0"
+                izz="0.00001"
+            />
+    </inertial>
+    <visual>
+      <origin xyz="-0.25 0 0 " rpy="0 0 0" />
+      <geometry>
+        <box size="0.5 .02 .02" />
+      </geometry>
+      <material name="">
+        <color rgba="0.89804 0.91765 0.92941 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <sphere radius="0.05" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="prism_rod_top_joint" type="revolute">
+    <origin xyz="-0.785 0.04 0" rpy="0 0 3.1415" />
+    <parent link="rotate_rod2" />
+    <child link="prism_rod_top" />
+    <axis xyz="0 0 1" />
+    <limit lower="-3.1415" upper="3.1415" effort="0" velocity="0" />
+  </joint>
+  <joint name="rotate_rod_joint2" type="revolute">
+    <origin xyz="0.032502 -0.056294 -0.084994" rpy="1.5708 1.0585 2.0944" />
+    <parent link="rotate_rod1" />
+    <child link="rotate_rod2" />
+    <axis xyz="0 0 1" />
+    <limit lower="-3.1415" upper="3.1415" effort="0" velocity="0" />
+  </joint>
+</robot>
