@@ -5,6 +5,7 @@ import numpy as np
 from scipy.interpolate import CubicSpline
 
 CTL_TARGET = [
+    [0.6, -1.5],
     [0.6, -1.5],  # initial position
     [0.31, -1.5], # wp 1, highest point after lifting
     [0.31, 0.015],# wp 2, endpoint after loading
@@ -12,6 +13,7 @@ CTL_TARGET = [
 ]
 
 DURATION = [
+    3.0,
     3.0,
     5.0,
     3.0,
@@ -46,11 +48,13 @@ def traj_gen(ctl_target: list, duration: list, time_step: float):
 
     return trajectory_coords.tolist()
 
+
 mjcf_filepath = '00-elevator.mjcf'
 
 model = mujoco.MjModel.from_xml_path(mjcf_filepath)
 
 TIME_STEP = model.opt.timestep
+traj = traj_gen(CTL_TARGET, DURATION, TIME_STEP)
 data = mujoco.MjData(model)
 
 ctrl_joint_names = [
@@ -59,17 +63,16 @@ ctrl_joint_names = [
 ]
 piston_motor_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, "piston_motor")
 rotate_motor_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, "rotate_motor")
+
+
 with mujoco.viewer.launch_passive(model, data) as viewer:
     print(f"Simulation launched. Press Ctrl+C in the terminal to exit.")
 
     # Apply a constant control signal to the piston to create movement
-    if model.nu > 0:  # Check if there are any actuators
-        data.ctrl[piston_motor_id] = CTL_TARGET[0][0]
-        data.ctrl[rotate_motor_id] = CTL_TARGET[0][1]
-        
-    traj = traj_gen(CTL_TARGET, DURATION, TIME_STEP)
-    # Run the simulation loop
+    data.ctrl[piston_motor_id] = CTL_TARGET[0][0]
+    data.ctrl[rotate_motor_id] = CTL_TARGET[0][1]
     
+    # Run the simulation loop
     i = 0;
     while viewer.is_running():
         # Advance the simulation by one step
@@ -81,4 +84,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
             print(f"Step {i}: Piston Control = {data.ctrl[piston_motor_id]}, Rotate Control = {data.ctrl[rotate_motor_id]}")
         import time
         time.sleep(TIME_STEP)
-        viewer.sync()
+        
+        # Don't play unntil it stablize XD
+        # if i > DURATION[0] / TIME_STEP:
+        #     viewer.sync()
