@@ -33,7 +33,7 @@ data = mujoco.MjData(model)
 
 # 4. Get the numerical ID of the site we want to track
 try:
-    site_id = model.site('piston_tip').id
+    site_id = model.site('top_socket').id
 except KeyError:
     print("Error: Site 'top_socket' not found in the model.")
     exit()
