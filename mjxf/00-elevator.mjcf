@@ -84,6 +84,7 @@
     </tendon>
 
     <actuator>
+        <motor name="rotate_motor" joint="rotate_rod_joint1" kp="10000" forcerange="-1000000 1000000" ctrlrange="0 1"/>
         <position name="piston_motor" joint="slider" kp="10e8" kv="1" forcerange="-10e300 10e300" ctrlrange="-1000 0"/>
         <position name="rotate_motor" joint="rotate_rod_joint1" kp="10000" forcerange="-1000000 1000000" ctrlrange="-1.5 1.5"/>
     </actuator>
