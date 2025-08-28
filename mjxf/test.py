@@ -13,9 +13,9 @@ CTL_TARGET = [
 ]
 
 # DEBUG ONLY
-SPD_UP = 2
+SPD_UP = 1
 DURATION = [
-    6.0/SPD_UP,
+    3.0/SPD_UP,
     3.0/SPD_UP,
     5.0/SPD_UP,
     3.0/SPD_UP,
@@ -65,7 +65,9 @@ ctrl_joint_names = [
 ]
 piston_motor_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, "piston_motor")
 rotate_motor_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, "rotate_motor")
+support_motor_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, "support_motor")
 
+data.ctrl[support_motor_id] = 0
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
     print(f"Simulation launched. Press Ctrl+C in the terminal to exit.")
@@ -83,6 +85,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         i += 1
         if i < len(traj):
             data.ctrl[piston_motor_id], data.ctrl[rotate_motor_id] = traj[i]
+            data.ctrl[support_motor_id] = -(1-data.ctrl[piston_motor_id])
             print(f"Step {i}: Piston Control = {data.ctrl[piston_motor_id]}, Rotate Control = {data.ctrl[rotate_motor_id]}")
         import time
         time.sleep(TIME_STEP)
