@@ -82,7 +82,7 @@
     </tendon>
 
     <actuator>
-        <motor name="piston_motor" joint="slider" gear="500" ctrllimited="true" ctrlrange="0 1"/>
+        <position name="piston_motor" joint="slider"  kp="100" ctrllimited="true" ctrlrange="0 1"/>
         <position name="rotate_motor" joint="rotate_rod_joint1" kp="100" ctrllimited="true" ctrlrange="-1.5 1.5"/>
     </actuator>
 
