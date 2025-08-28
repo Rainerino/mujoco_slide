@@ -3,12 +3,17 @@ import mujoco.viewer
 
 import numpy as np
 from scipy.interpolate import CubicSpline
+# -1.42
+# -1.71
+# 0.19
+# 0.575
+# 0
 
 CTL_TARGET = [
     [1.0, -1.5],
     [0.6, -1.5],  # initial position
-    [0.30, -1.5], # wp 1, highest point after lifting
-    [0.30, 0.015],# wp 2, endpoint after loading
+    [0.35, -1.5], # wp 1, highest point after lifting
+    [0.35, 0.015],# wp 2, endpoint after loading
     [0.4, 0.015], # wp 3, endpoint after unloading
 ]
 
@@ -22,6 +27,7 @@ DURATION = [
 ]
 
 TIME_STEP = 60/1000 # (s) Update 60 Hz
+
 
 def traj_gen(ctl_target: list, duration: list, time_step: float):
     """
@@ -58,6 +64,11 @@ model = mujoco.MjModel.from_xml_path(mjcf_filepath)
 TIME_STEP = model.opt.timestep
 traj = traj_gen(CTL_TARGET, DURATION, TIME_STEP)
 data = mujoco.MjData(model)
+start_key_id = model.key('initial_pose').id
+
+# 4. Reset the simulation data to that keyframe's state
+# This is the crucial step.
+mujoco.mj_resetDataKeyframe(model, data, start_key_id)
 
 ctrl_joint_names = [
     'piston_motor',
@@ -75,21 +86,22 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
     # Apply a constant control signal to the piston to create movement
     data.ctrl[piston_motor_id] = CTL_TARGET[0][0]
     data.ctrl[rotate_motor_id] = CTL_TARGET[0][1]
-    
+
     # Run the simulation loop
     i = 0;
     while viewer.is_running():
         # Advance the simulation by one step
+
         mujoco.mj_step(model, data)
-        
+
         i += 1
         if i < len(traj):
             data.ctrl[piston_motor_id], data.ctrl[rotate_motor_id] = traj[i]
             data.ctrl[support_motor_id] = -(1-data.ctrl[piston_motor_id])
-            print(f"Step {i}: Piston Control = {data.ctrl[piston_motor_id]}, Rotate Control = {data.ctrl[rotate_motor_id]}")
+            # print(f"Step {i}: Piston Control = {data.ctrl[piston_motor_id]}, Rotate Control = {data.ctrl[rotate_motor_id]}")
         import time
         time.sleep(TIME_STEP)
-        
+
         # Don't play unntil it stablize XD
         # if i > DURATION[0] / TIME_STEP:
         viewer.sync()
