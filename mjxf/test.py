@@ -5,18 +5,20 @@ import numpy as np
 from scipy.interpolate import CubicSpline
 
 CTL_TARGET = [
-    [0.6, -1.5],
+    [1.0, -1.5],
     [0.6, -1.5],  # initial position
-    [0.31, -1.5], # wp 1, highest point after lifting
-    [0.31, 0.015],# wp 2, endpoint after loading
+    [0.30, -1.5], # wp 1, highest point after lifting
+    [0.30, 0.015],# wp 2, endpoint after loading
     [0.4, 0.015], # wp 3, endpoint after unloading
 ]
 
+# DEBUG ONLY
+SPD_UP = 2
 DURATION = [
-    3.0,
-    3.0,
-    5.0,
-    3.0,
+    6.0/SPD_UP,
+    3.0/SPD_UP,
+    5.0/SPD_UP,
+    3.0/SPD_UP,
 ]
 
 TIME_STEP = 60/1000 # (s) Update 60 Hz
@@ -87,4 +89,4 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         
         # Don't play unntil it stablize XD
         # if i > DURATION[0] / TIME_STEP:
-        #     viewer.sync()
+        viewer.sync()
