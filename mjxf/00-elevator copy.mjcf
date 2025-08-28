@@ -47,7 +47,7 @@
   </contact>
 
   <equality>
-    <connect body1="piston_rod" body2="prism_rod_top" anchor="0 0 0" />
+    <connect body1="piston_rod" body2="prism_rod_top" anchor="0. 0 0" />
   </equality>
   <actuator>
     <motor name="piston_motor" joint="slider" ctrllimited="true" ctrlrange="-2 0.5"/>
