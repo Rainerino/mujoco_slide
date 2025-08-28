@@ -1,72 +1,75 @@
 <mujoco model="00-elevator">
-  <option cone="elliptic" impratio="10"/>
-  <compiler angle="radian" autolimits="true" meshdir="../meshes/"/>
+    <option cone="elliptic" impratio="10"/>
+    <compiler angle="radian" autolimits="true" meshdir="../meshes/"/>
 
-  <asset>
-    <material name="grey" rgba="0.52941 0.54902 0.54902 1"/>
-    <material name="light_grey" rgba="0.89804 0.91765 0.92941 1"/>
-    <mesh name="rotate_rod1_mesh" file="rotate_rod1.STL"/>
-    <mesh name="rotate_rod2_mesh" file="rotate_rod2.STL"/>
-    <mesh name="rotate_rod3_mesh" file="rotate_rod3.STL"/>
-  </asset>
+    <asset>
+        <material name="grey" rgba="0.52941 0.54902 0.54902 1"/>
+        <material name="light_grey" rgba="0.89804 0.91765 0.92941 1"/>
+        <mesh name="rotate_rod1_mesh" file="rotate_rod1.STL"/>
+        <mesh name="rotate_rod2_mesh" file="rotate_rod2.STL"/>
+        <mesh name="rotate_rod3_mesh" file="rotate_rod3.STL"/>
+    </asset>
 
-  <worldbody>
-    <body name="base_link">
-      <geom type="sphere" size="0.01" material="grey"/>
+    <worldbody>
+        <body name="base_link">
+        <geom type="sphere" size="0.01" material="grey"/>
 
-      <body name="rotate_rod1" pos="0.06 0 0" euler="0 0 1.5708">
-        <joint name="rotate_rod_joint1" type="hinge" axis="0 0 1" range="-0.01 0.01" damping=".1"/>
+        <body name="rotate_rod1" pos="0.06 0 0" euler="0 0 1.5708">
+            <joint name="rotate_rod_joint1" type="hinge" axis="0 0 1" range="-0.01 0.01" damping=".1"/>
 
-        <geom type="mesh" mesh="rotate_rod1_mesh" material="grey"/>
+            <geom type="mesh" mesh="rotate_rod1_mesh" material="grey"/>
 
-        <body name="rotate_rod2" pos="0.032502 -0.056294 -0.084994" euler="1.5708 2.0944 1.0585 ">
-          <joint name="rotate_rod_joint2" type="hinge" axis="0 0 1" range="-2 -1" damping=".1"/>
+            <body name="rotate_rod2" pos="0.032502 -0.056294 -0.084994" euler="1.5708 2.0944 1.0585 ">
+            <joint name="rotate_rod_joint2" type="hinge" axis="0 0 1" range="-2.41 -1" damping=".1"/>
 
-          <geom type="mesh" mesh="rotate_rod2_mesh" material="light_grey"/>
+            <geom type="mesh" mesh="rotate_rod2_mesh" material="light_grey"/>
 
-          <body name="prism_rod_top" pos="-0.785 0.04 0" euler="0 0 3.1415">
-            <joint name="prism_rod_top_joint" type="hinge" axis="0 0 1" range="0 1" damping=".1"/>
-            <geom type="box" size="0.25 0.01 0.01" pos="-0.25 0 0" material="light_grey"/>
-            <site name="top_socket" pos="-0.4 0 0" size="0.01" rgba="1 0 0 1"/>
-          </body>
-        </body>
+            <body name="prism_rod_top" pos="-0.785 0.04 0" euler="0 0 3.1415">
+                <joint name="prism_rod_top_joint" type="hinge" axis="0 0 1" range="0 1" damping=".1"/>
+                <geom type="box" size="0.2 0.01 0.01" pos="-0.2 0 0" material="light_grey"/>
+                <site name="top_socket" pos="-0.4 0 0" size="0.01" rgba="1 0 0 1"/>
+            </body>
+            </body>
 
 
 
-        <body name="prism_rod_bottom" pos="0.032502 -0.055 0.12" euler="-1.5708 1.0585 2.0944">
-          <joint name="prism_rod_bottom_joint" type="hinge" axis="0 0 1" range="0 2" damping=".1"/>
+            <body name="prism_rod_bottom" pos="0.032502 -0.055 0.12" euler="-1.5708 1.0585 2.0944">
+            <joint name="prism_rod_bottom_joint" type="hinge" axis="0 0 1" range="-1 2" damping=".1"/>
 
-          <geom type="box" size="0.15 0.01 0.01" pos="-0.15 0 0" material="light_grey"/>
+            <geom type="box" size="0.2 0.01 0.01" pos="-0.2 0 0" material="light_grey"/>
 
-            <body name="piston_rod" pos="0 0 0" euler="0 0 3.1415">
-              <joint name="slider" type="slide" axis="1 0 0" range="-0.5 0" />
-              <geom type="capsule" fromto="0 0 0 0.1 0 0" size="0.012" material="light_grey"/>
-              <site name="piston_tip" pos="0.1 0 0" size="0.01" rgba="1 0 0 1"/>
+                <body name="piston_rod" pos="0 0 0" euler="0 0 3.1415">
+                <joint name="slider" type="slide" axis="1 0 0" range="-0.5 0" />
+                <geom type="capsule" fromto="0 0 0 0.1 0 0" size="0.012" material="light_grey"/>
+                <site name="piston_tip" pos="0.1 0 0" size="0.01" rgba="1 0 0 1"/>
+                </body>
             </body>
         </body>
-      </body>
-    </body>
-  </worldbody>
+        </body>
+    </worldbody>
 
-  <contact>
-    <exclude body1="piston_rod" body2="prism_rod_top"/>
-    <exclude body1="piston_rod" body2="prism_rod_bottom"/>
-    <exclude body1="piston_rod" body2="rotate_rod2"/>
-    <exclude body1="piston_rod" body2="rotate_rod1"/>
-    <exclude body1="prism_rod_bottom" body2="rotate_rod2"/>
-    <exclude body1="rotate_rod1" body2="rotate_rod2"/>
+    <contact>
+        <exclude body1="piston_rod" body2="prism_rod_top"/>
+        <exclude body1="piston_rod" body2="prism_rod_bottom"/>
+        <exclude body1="piston_rod" body2="rotate_rod2"/>
+        <exclude body1="piston_rod" body2="rotate_rod1"/>
+        <exclude body1="prism_rod_bottom" body2="rotate_rod2"/>
+        <exclude body1="rotate_rod1" body2="rotate_rod2"/>
 
-    <exclude body1="prism_rod_top" body2="rotate_rod2"/>
-    <exclude body1="prism_rod_top" body2="prism_rod_bottom"/>
-  </contact>
+        <exclude body1="prism_rod_top" body2="rotate_rod2"/>
+        <exclude body1="prism_rod_top" body2="prism_rod_bottom"/>
+    </contact>
 
-  <equality>
-    <connect site1="piston_tip" site2="top_socket" />
-  </equality>
+    <equality>
+        <connect site1="piston_tip" site2="top_socket" />
+    </equality>
 
+    <keyframe>
+      <key qpos='0 0 0 0 0'/>
+    </keyframe>
 
-  <actuator>
-    <motor name="piston_motor" joint="slider" gear="500" ctrllimited="true" ctrlrange="0 1"/>
-</actuator>
+    <actuator>
+        <motor name="piston_motor" joint="slider" gear="500" ctrllimited="true" ctrlrange="0 1"/>
+    </actuator>
 
 </mujoco>
