@@ -5,7 +5,9 @@
     <asset>
         <material name="grey" rgba="0.52941 0.54902 0.54902 1"/>
         <material name="light_grey" rgba="0.89804 0.91765 0.92941 1"/>
-        <material name="invisible" rgba="1 0 0 0"/>
+        <material name="transparent" rgba="1 0 0 0"/>
+        <material name="red" rgba="1 0 0 1"/>
+        <material name="green" rgba="0 1 0 1"/>
         <mesh name="rotate_rod1_mesh" file="rotate_rod1.STL"/>
         <mesh name="rotate_rod2_mesh" file="rotate_rod2.STL"/>
         <mesh name="rotate_rod3_mesh" file="rotate_rod3.STL"/>
@@ -16,9 +18,9 @@
         <geom name="ground" type="plane" size="0 0 0.1" rgba="0.9 0.9 0.9 1"/>
         <body name="dumdum" pos="0.5 -0.5 0">
             <joint type="free" damping="0.5" frictionloss="1"/>
-            <geom type="box" size="0.1 0.1 0.1" mass="20" material="grey"/>
-            <site name="tendon_site_end_left" pos="0.05 0.05 0.1" size="0.015" rgba="0 0.8 0 1"/>
-            <site name="tendon_site_end_right" pos="-0.05 -0.05 0.1" size="0.015" rgba="0 0.8 0 1"/>
+            <geom type="box" size="0.1 0.1 0.1" mass="40" material="grey"/>
+            <site name="tendon_site_end_left" pos="0.05 0.05 0.1" size="0.015" material="transparent"/>
+            <site name="tendon_site_end_right" pos="-0.05 -0.05 0.1" size="0.015" material="transparent"/>
         </body>
         <body name="base_link" pos="0 0 0.6">
             <body name="rotate_rod1" pos="0.06 0 0" euler="0 0 1.5708">
@@ -28,14 +30,14 @@
 
                 <body name="rotate_rod2" pos="0.032502 -0.056294 -0.084994" euler="1.5708 2.0944 1.0585 ">
                     <joint name="rotate_rod_joint2" type="hinge" axis="0 0 1" range="-2.41 -1" damping="100"/>
-                    <site name="tendon_site_start_left" pos="-0.91 -0.15 0" size="0.015" rgba="0 0.8 0 1"/>
-                    <site name="tendon_site_start_right" pos="-0.92 -0.16 0" size="0.015" rgba="0 0.8 0 1"/>
+                    <site name="tendon_site_start_left" pos="-0.91 -0.15 0" size="0.015" material="transparent"/>
+                    <site name="tendon_site_start_right" pos="-0.92 -0.16 0" size="0.015" material="transparent"/>
                     <geom type="mesh" mesh="rotate_rod2_mesh" material="light_grey"/>
 
                     <body name="prism_rod_top" pos="-0.785 0.04 0" euler="0 0 3.1415">
                         <joint name="prism_rod_top_joint" type="hinge" axis="0 0 1" range="0 1" damping="100"/>
                         <geom type="box" size="0.2 0.01 0.01" pos="-0.2 0 0" material="light_grey"/>
-                        <site name="top_socket" pos="-0.4 0 0" size="0.01" rgba="1 0 0 1"/>
+                        <site name="top_socket" pos="-0.4 0 0" size="0.01" material="transparent"/>
                     </body>
                 </body>
 
@@ -45,9 +47,9 @@
                 <geom type="box" size="0.2 0.01 0.01" pos="-0.2 0 0" material="light_grey"/>
 
                     <body name="piston_rod" pos="0 0 0" euler="0 0 3.1415">
-                    <joint name="slider" type="slide" axis="1 0 0" range="-0.5 0" damping="10000" frictionloss="1"/>
-                    <geom type="capsule" fromto="0 0 0 0.1 0 0" size="0.012" material="invisible"/>
-                    <site name="piston_tip" pos="0.1 0 0" size="0.01" rgba="1 0 0 1"/>
+                    <joint name="slider" type="slide" axis="1 0 0" range="-0.5 0" damping="100000" frictionloss="1000"/>
+                    <geom type="capsule" fromto="0 0 0 0.1 0 0" size="0.012" material="transparent"/>
+                    <site name="piston_tip" pos="0.1 0 0" size="0.01"  material="transparent"/>
                     </body>
                 </body>
             </body>
@@ -71,18 +73,18 @@
     </equality>
 
     <tendon>
-        <spatial name="pull_tendon_left" width="0.003" rgba="0.8 0.8 0 1" stiffness="10000" damping="1000" springlength="0.4">
+        <spatial name="pull_tendon_left" width="0.003" material="green" stiffness="10000" damping="100" springlength="0.4">
             <site site="tendon_site_start_left"/>
             <site site="tendon_site_end_left"/>
         </spatial>
-        <spatial name="pull_tendon_right" width="0.003" rgba="0.8 0.8 0 1" stiffness="10000" damping="100" springlength="0.4">
+        <spatial name="pull_tendon_right" width="0.003" material="green" stiffness="10000" damping="100" springlength="0.4">
             <site site="tendon_site_start_right"/>
             <site site="tendon_site_end_right"/>
         </spatial>
     </tendon>
 
     <actuator>
-        <position name="piston_motor" joint="slider" kp="100000000" kv="1000"  ctrlrange="-0.5 0"/>
+        <position name="piston_motor" joint="slider" kp="10e8" kv="1" forcerange="-10e300 10e300" ctrlrange="-1000 0"/>
         <position name="rotate_motor" joint="rotate_rod_joint1" kp="10000" forcerange="-1000000 1000000" ctrlrange="-1.5 1.5"/>
     </actuator>
 
